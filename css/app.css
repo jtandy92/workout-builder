@@ -1,0 +1,17 @@
+body {
+    background-color: #0a0a0a;
+  }
+  
+  .app-empty-card {
+    border: 1px dashed rgba(0, 240, 255, 0.2);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .app-button-primary {
+    background: #00f0ff;
+    color: #000;
+  }
+  
+  .app-button-primary:hover {
+    filter: brightness(1.05);
+  }

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Workout Builder</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Lexend:wght@400;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#00f0ff",
+            background: "#0a0a0a",
+            surface: "#121212",
+            "surface-variant": "#1a1a1a",
+            "on-background": "#e2e8f0",
+            "on-surface": "#f8fafc",
+            "on-surface-variant": "#94a3b8",
+            outline: "#334155",
+            "outline-variant": "#1e293b"
+          },
+          fontFamily: {
+            headline: ["Lexend"],
+            body: ["Inter"],
+            label: ["Space Grotesk"],
+            mono: ["JetBrains Mono"]
+          },
+          borderRadius: {
+            DEFAULT: "0px",
+            lg: "0px",
+            xl: "0px",
+            full: "9999px"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #0a0a0a;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      min-height: max(884px, 100dvh);
+    }
+    .cyber-grid {
+      background-image: linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.1;
+    }
+    .neon-glow {
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+    .neon-border {
+      border-left: 3px solid #00f0ff;
+    }
+  </style>
+</head>
+<body class="bg-background selection:bg-cyan-500/30">
+  <div class="fixed inset-0 cyber-grid pointer-events-none"></div>
+
+  <header class="fixed top-0 w-full z-[110] bg-neutral-950/80 backdrop-blur-xl border-b border-cyan-500/20">
+    <div class="flex justify-between items-center w-full px-6 h-16 max-w-screen-2xl mx-auto">
+      <div class="flex items-center gap-4">
+        <button class="text-cyan-400 hover:bg-neutral-800/50 transition-all duration-300 p-2 rounded-full active:scale-90" type="button">
+          <span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+        </button>
+        <h1 class="text-lg font-bold tracking-[0.2em] text-cyan-400 font-['Space_Grotesk'] uppercase">EXER_PLANNER v1.0</h1>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="hidden md:flex gap-8 items-center">
+          <a class="text-neutral-500 hover:text-cyan-200 transition-colors font-['Space_Grotesk'] tracking-widest text-xs" href="index.html">DASH</a>
+          <a class="text-neutral-500 hover:text-cyan-200 transition-colors font-['Space_Grotesk'] tracking-widest text-xs" href="exercise-library.html">LIBRARY</a>
+          <a class="text-neutral-500 hover:text-cyan-200 transition-colors font-['Space_Grotesk'] tracking-widest text-xs" href="workout-history.html">HISTORY</a>
+          <a class="text-cyan-400 font-bold font-['Space_Grotesk'] tracking-widest text-xs" href="workout-builder.html">BUILD</a>
+        </div>
+        <button
+          type="button"
+          class="w-8 h-8 rounded-full overflow-hidden border border-cyan-500/50 bg-neutral-800 hover:bg-neutral-700/60 hover:border-cyan-400/40 transition-all active:scale-95"
+          onclick="window.location.href='index.html'"
+          aria-label="Back to dashboard"
+        ></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-2xl mx-auto px-6 pt-24 pb-32 md:pb-16 relative z-10">
+    <header class="mb-20">
+      <span class="font-['Space_Grotesk'] text-[10px] font-bold tracking-[0.4em] text-cyan-500/60 uppercase mb-4 block">SYSTEM // NEW_ROUTINE</span>
+      <input id="builder-workout-name" class="w-full bg-transparent border-none p-0 text-on-background font-headline text-5xl font-extrabold tracking-tighter focus:ring-0 placeholder:text-neutral-800 uppercase" placeholder="UNTITLED SESSION" type="text" />
+      <div class="h-[2px] w-24 bg-cyan-400 mt-6 neon-glow"></div>
+    </header>
+
+    <section id="builder-list-section" class="space-y-3">
+      <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-2">
+        <h2 class="font-['Space_Grotesk'] font-bold text-sm tracking-[0.2em] text-on-surface uppercase italic">Composition</h2>
+        <span class="font-mono text-[10px] text-cyan-400/60">ARRAY[ ]</span>
+      </div>
+    </section>
+
+    <section class="mt-12 space-y-4">
+      <button id="add-exercise-button" class="w-full group flex items-center justify-center gap-3 py-10 border border-dashed border-cyan-500/20 bg-neutral-900/40 hover:bg-cyan-500/5 hover:border-cyan-500 transition-all" type="button">
+        <span class="material-symbols-outlined text-cyan-400">add_box</span>
+        <span class="font-['Space_Grotesk'] font-bold text-cyan-400 tracking-[0.2em] text-xs uppercase">ADD_EXERCISE</span>
+      </button>
+
+      <div class="border border-cyan-500/20 bg-neutral-900/50 p-5 shadow-[inset_0_0_0_1px_rgba(0,240,255,0.06)]">
+        <div class="flex items-end justify-between gap-4 border-b border-white/5 pb-3 mb-4">
+          <div>
+            <span class="font-mono text-[10px] text-cyan-400/70 uppercase tracking-[0.35em] block mb-1">// persist</span>
+            <span class="font-['Space_Grotesk'] font-bold text-xs tracking-[0.2em] text-on-surface uppercase">Save routine</span>
+          </div>
+          <span class="font-mono text-[10px] text-neutral-500 uppercase tracking-widest shrink-0">workout.dat</span>
+        </div>
+        <button
+          id="save-routine-button"
+          type="button"
+          class="w-full flex items-center justify-center gap-3 py-4 px-4 border border-cyan-500/35 bg-cyan-400/5 text-cyan-400 font-['Space_Grotesk'] font-bold text-xs tracking-[0.2em] uppercase hover:bg-cyan-400/15 hover:border-cyan-400/55 hover:shadow-[0_0_20px_rgba(0,240,255,0.15)] active:scale-[0.99] transition-all"
+        >
+          <span class="material-symbols-outlined text-cyan-400">save</span>
+          SAVE_ROUTINE
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="fixed bottom-0 left-0 w-full z-[9999] flex justify-around items-center h-20 px-4 bg-neutral-900/90 backdrop-blur-2xl border-t border-white/5 md:hidden shadow-[0_-10px_30px_rgba(0,0,0,0.5)]" aria-label="Primary">
+
+    <a class="flex flex-col items-center justify-center text-neutral-500 hover:text-cyan-200 transition-colors px-4 py-2" href="index.html">
+      <span class="material-symbols-outlined">grid_view</span>
+      <span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase mt-1">DASHBOARD</span>
+    </a>
+  
+    <a class="flex flex-col items-center justify-center text-neutral-500 hover:text-cyan-200 transition-colors px-4 py-2" href="exercise-library.html">
+      <span class="material-symbols-outlined">database</span>
+      <span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase mt-1">LIBRARY</span>
+    </a>
+  
+    <a class="flex flex-col items-center justify-center text-neutral-500 hover:text-cyan-200 transition-colors px-4 py-2" href="workout-history.html">
+      <span class="material-symbols-outlined">history</span>
+      <span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase mt-1">HISTORY</span>
+    </a>
+  
+    <a class="flex flex-col items-center justify-center text-cyan-400 shadow-[inset_0_-2px_0_0_#00F0FF] bg-cyan-500/5 px-4 py-2" href="workout-builder.html">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_box</span>
+      <span class="font-['Inter'] text-[10px] font-medium tracking-widest uppercase mt-1">BUILD</span>
+    </a>
+  
+  </nav>
+
+  <script src="js/store.js"></script>
+  <script src="js/builder.js"></script>
+</body>
+</html>
