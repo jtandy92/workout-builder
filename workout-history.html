@@ -7,21 +7,29 @@
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css" />
   <script>
     tailwind.config = {
       darkMode: "class",
       theme: {
         extend: {
           colors: {
-            primary: "#00f0ff",
-            "on-primary": "#000000",
-            surface: "#0a0a0a",
-            "on-surface": "#f8f9fa",
-            "surface-variant": "#1a1a1a",
-            "on-surface-variant": "#a1a1a1",
-            outline: "#333333",
-            "outline-variant": "#222222",
-            tertiary: "#ff00ff"
+            primary: "var(--primary)",
+            "on-primary": "var(--on-primary)",
+            surface: "var(--bg-surface)",
+            "on-surface": "var(--text-primary)",
+            "surface-variant": "var(--bg-surface-variant)",
+            "on-surface-variant": "var(--text-secondary)",
+            outline: "var(--border-primary)",
+            "outline-variant": "var(--border-secondary)",
+            tertiary: "var(--primary)",
+            neutral: {
+              "500": "var(--text-neutral-500)",
+              "700": "var(--text-neutral-700)",
+              "800": "var(--bg-neutral-800)",
+              "900": "var(--bg-neutral-900)",
+              "950": "var(--bg-neutral-950)"
+            }
           },
           fontFamily: {
             headline: ["Space Grotesk"],
@@ -39,7 +47,8 @@
     body {
       font-family: 'Inter', sans-serif;
       -webkit-font-smoothing: antialiased;
-      background-color: #0a0a0a;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
       min-height: max(884px, 100dvh);
     }
     .headline-font {
@@ -49,17 +58,15 @@
       font-family: 'JetBrains Mono', monospace;
     }
     .cyber-glow-text {
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+      text-shadow: 0 0 10px var(--primary-glow);
     }
   </style>
 </head>
-<body class="bg-surface text-on-surface">
+<body class="bg-background selection:bg-cyan-500/30">
+  <div class="fixed inset-0 cyber-grid pointer-events-none"></div>
   <header class="fixed top-0 w-full z-[110] bg-neutral-950/80 backdrop-blur-xl border-b border-cyan-500/20">
     <div class="flex justify-between items-center w-full px-6 h-16 max-w-screen-2xl mx-auto">
       <div class="flex items-center gap-4">
-        <button class="text-cyan-400 hover:bg-neutral-800/50 transition-all duration-300 p-2 rounded-full active:scale-90" type="button">
-          <span class="material-symbols-outlined" data-icon="terminal">terminal</span>
-        </button>
         <h1 class="text-lg font-bold tracking-[0.2em] text-cyan-400 font-['Space_Grotesk'] uppercase">EXER_PLANNER v1.0</h1>
       </div>
       <div class="flex items-center gap-6">
@@ -69,8 +76,9 @@
           <a class="text-cyan-400 font-bold font-['Space_Grotesk'] tracking-widest text-xs" href="workout-history.html">HISTORY</a>
           <a class="text-neutral-500 hover:text-cyan-200 transition-colors font-['Space_Grotesk'] tracking-widest text-xs" href="workout-builder.html">BUILD</a>
         </div>
-        <div class="w-8 h-8 rounded-full overflow-hidden border border-cyan-500/50 bg-neutral-800"></div>
-      </div>
+        <button class="theme-toggle-btn" data-theme-toggle type="button" aria-label="Toggle theme">
+          <span class="material-symbols-outlined" data-theme-toggle-icon style="font-size: 20px;">light_mode</span>
+        </button>
     </div>
   </header>
 
@@ -143,6 +151,7 @@
     </a>
   </nav>
 
+  <script src="js/theme.js"></script>
   <script src="js/store.js"></script>
   <script src="js/history.js"></script>
 </body>
