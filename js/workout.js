@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let session = window.AppStore.getActiveWorkoutSession();
   let timerId = null;
   let isRunning = false;
+  let isCompleting = false;
 
   if (!session || !Array.isArray(session.queue) || !session.queue.length) {
     alert("No active workout found.");
@@ -37,8 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
     exerciseNameEl.textContent = exercise.name || "Exercise";
     exerciseDescriptionEl.textContent =
       exercise.commentary || exercise.description || "No description for this exercise yet.";
-    setsRemainingEl.textContent = String(exercise.remainingSets || 0).padStart(2, "0");
-    targetRepsEl.textContent = String(exercise.reps || 0).padStart(2, "0");
+    setsRemainingEl.textContent = String(Math.max(0, Number(exercise.remainingSets) || 0)).padStart(2, "0");
+    targetRepsEl.textContent = String(Math.max(0, Number(exercise.reps) || 0)).padStart(2, "0");
     timerDisplayEl.textContent = window.AppStore.formatDuration(session.elapsedSeconds || 0);
 
     if (exercise.image) {
@@ -75,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${escapeHtml(exercise.name)}
               </p>
               <p class="font-mono text-[10px] text-on-surface-variant uppercase tracking-widest">
-                ${exercise.sets} SETS X ${exercise.reps} REPS
+                ${escapeHtml(exercise.sets)} SETS X ${escapeHtml(exercise.reps)} REPS
               </p>
             </div>
             <span class="material-symbols-outlined text-white/20 group-hover:text-primary transition-colors">arrow_forward</span>
@@ -156,6 +157,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function completeWorkout() {
+    if (isCompleting) return;
+    isCompleting = true;
+
     pauseTimer();
 
     window.AppStore.addHistoryEntry({

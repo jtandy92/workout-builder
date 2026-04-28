@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     const history = window.AppStore.getHistory();
 
+    if (!historyList) return;
+
     if (historyCount) {
       historyCount.textContent = `${history.length}_SESSIONS_COMPLETED`;
     }
@@ -17,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
               <h4 class="headline-font text-xl md:text-2xl font-bold text-on-surface uppercase">No workouts yet</h4>
             </div>
             <div class="flex flex-wrap items-center gap-x-6 gap-y-2 md:justify-end md:flex-nowrap shrink-0 mono-font text-xs text-on-surface-variant">
-              <span class="w-[4.5rem] md:text-right">—</span>
-              <span class="w-[6.5rem] md:text-right">—</span>
+              <span class="w-[4.5rem] md:text-right">-</span>
+              <span class="w-[6.5rem] md:text-right">-</span>
               <span class="flex items-center gap-3 md:gap-4">
                 <span class="headline-font text-xl font-bold text-on-surface w-12 md:w-14 text-right tabular-nums">00:00</span>
                 <span class="w-9"></span>

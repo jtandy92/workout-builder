@@ -26,20 +26,25 @@ document.addEventListener("DOMContentLoaded", () => {
   saveRoutineButton?.addEventListener("click", () => {
     saveDraftName();
     const draft = loadDraft();
+    const validExercises = draft.exercises.filter((exercise) => {
+      const sets = Number(exercise.sets);
+      const reps = Number(exercise.reps);
+      return Number.isFinite(sets) && sets > 0 && Number.isFinite(reps) && reps > 0;
+    });
 
     if (!draft.name.trim()) {
       alert("Please enter a workout name.");
       return;
     }
 
-    if (!draft.exercises.length) {
+    if (!validExercises.length) {
       alert("Please add at least one exercise.");
       return;
     }
 
     window.AppStore.addWorkout({
       name: draft.name,
-      exercises: draft.exercises
+      exercises: validExercises
     });
 
     window.AppStore.resetBuilderDraft();
@@ -89,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   ${escapeHtml(exercise.name)}
                 </h3>
                 <p class="font-mono text-[11px] uppercase tracking-widest text-neutral-500">
-                  ${exercise.sets} sets × ${exercise.reps} reps${exercise.load ? ` • ${escapeHtml(exercise.load)}` : ""}
+                  ${exercise.sets} sets x ${exercise.reps} reps${exercise.load ? ` - ${escapeHtml(exercise.load)}` : ""}
                 </p>
                 ${
                   exercise.commentary
@@ -99,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
               <button
                 class="remove-builder-exercise text-neutral-500 hover:text-red-400 transition-colors"
-                data-builder-exercise-id="${exercise.id}"
+                data-builder-exercise-id="${escapeHtml(exercise.id)}"
                 type="button"
                 title="Remove exercise"
               >

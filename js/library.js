@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const query = (searchInput?.value || "").trim().toLowerCase();
     const exercises = window.AppStore.getExercises().filter((exercise) => {
-      return exercise.name.toLowerCase().includes(query);
+      return String(exercise.name || "").toLowerCase().includes(query);
     });
 
     if (!exercises.length) {
@@ -54,14 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
     grid.innerHTML = exercises
       .map((exercise) => {
         const imageMarkup = exercise.image
-          ? `<img alt="${escapeHtml(exercise.name)}" class="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" src="${exercise.image}" />`
+          ? `<img alt="${escapeHtml(exercise.name)}" class="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" src="${escapeHtml(exercise.image)}" />`
           : `<div class="w-full h-full flex items-center justify-center text-[10px] font-mono text-neutral-600 uppercase tracking-widest">No Image</div>`;
 
         return `
           <div class="bg-surface-container p-8 flex flex-col justify-between group cyber-card-border transition-all min-h-[260px] relative overflow-hidden">
             <button
               class="delete-exercise absolute top-4 right-4 text-neutral-700 group-hover:text-error transition-colors z-20"
-              data-exercise-id="${exercise.id}"
+              data-exercise-id="${escapeHtml(exercise.id)}"
               type="button"
               title="Delete exercise"
             >
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <button
               class="open-exercise flex flex-col justify-between text-left w-full h-full cursor-pointer"
-              data-exercise-id="${exercise.id}"
+              data-exercise-id="${escapeHtml(exercise.id)}"
               type="button"
               title="${mode === "pick" ? "Add exercise" : "Open exercise"}"
             >

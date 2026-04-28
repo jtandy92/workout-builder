@@ -32,24 +32,45 @@ document.addEventListener("DOMContentLoaded", () => {
   if (loadEl) loadEl.value = parseLoadNumber(exercise.load);
   if (commentaryEl) commentaryEl.textContent = exercise.commentary || exercise.description || "Edit commentary here.";
 
+  function parsePositiveInteger(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed <= 0) return 0;
+    return Math.floor(parsed);
+  }
+
+  function parseNonNegativeNumber(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed < 0) return null;
+    return parsed;
+  }
+
   saveButton?.addEventListener("click", () => {
+    const sets = parsePositiveInteger(setsEl?.value);
+    const reps = parsePositiveInteger(repsEl?.value);
+    const loadValue = parseNonNegativeNumber(loadEl?.value || 0);
+
+    if (!sets || !reps) {
+      alert("Sets and reps must be whole numbers greater than 0.");
+      return;
+    }
+
+    if (loadValue === null) {
+      alert("Load must be 0 or greater.");
+      return;
+    }
+
     const configuredExercise = {
       exerciseId: exercise.id,
       name: exercise.name,
       image: exercise.image || "",
       description: exercise.description || "",
       commentary: commentaryEl?.textContent?.trim() || "",
-      sets: Number(setsEl?.value || 0),
-      reps: Number(repsEl?.value || 0),
-      load: String(loadEl?.value || "").trim()
-        ? `${String(loadEl.value).trim()} kg`
+      sets,
+      reps,
+      load: loadValue > 0
+        ? `${loadValue} kg`
         : ""
     };
-
-    if (!configuredExercise.sets || !configuredExercise.reps) {
-      alert("Sets and reps must be greater than 0.");
-      return;
-    }
 
     window.AppStore.addExerciseToBuilder(configuredExercise);
     window.location.href = "workout-builder.html";

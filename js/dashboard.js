@@ -51,12 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <div class="mt-6 flex justify-between items-center">
           <button class="start-workout bg-cyan-400 text-black px-4 py-2 rounded"
-            data-id="${workout.id}">
+            data-id="${escapeHtml(workout.id)}">
             Start
           </button>
 
           <button class="delete-workout text-red-400"
-            data-id="${workout.id}">
+            data-id="${escapeHtml(workout.id)}">
             Delete
           </button>
         </div>
@@ -84,7 +84,12 @@ document.addEventListener("DOMContentLoaded", () => {
     workoutsGrid.querySelectorAll(".start-workout").forEach((btn) => {
       btn.addEventListener("click", () => {
         const workoutId = btn.dataset.id;
-        window.AppStore.startWorkoutSession(workoutId);
+        const session = window.AppStore.startWorkoutSession(workoutId);
+        if (!session) {
+          alert("This workout has no exercises. Add an exercise before starting.");
+          return;
+        }
+
         window.location.href = "active-workout.html";
       });
     });
@@ -102,7 +107,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return String(value)
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   renderWorkouts();

@@ -96,7 +96,7 @@ header h1 {
   color: var(--primary) !important;
 }
 
-header button text-cyan-400,
+header button .text-cyan-400,
 header .text-cyan-400 {
   color: var(--primary) !important;
 }
@@ -365,6 +365,10 @@ textarea:focus {
 
 .text-primary {
   color: var(--primary) !important;
+}
+
+.text-background {
+  color: var(--bg-primary) !important;
 }
 
 /* ===== ADDITIONAL BACKGROUNDS ===== */
