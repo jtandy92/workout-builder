@@ -1,105 +1,123 @@
 (function () {
   const STORAGE_KEY = "exercise_app_db_v1";
-  const DEFAULT_LIBRARY_VERSION = 1;
+  const DEFAULT_LIBRARY_VERSION = 2;
   const DEFAULT_LIBRARY_CREATED_AT = "2026-04-28T00:00:00.000Z";
   const DEFAULT_EXERCISES = [
     {
-      id: "seed_push_up",
-      name: "Push Up",
+      id: "seed_push_ups",
+      name: "Push-ups",
       description: "Keep a straight line from shoulders to heels. Lower under control, then press the floor away.",
       sets: 3,
       reps: 12,
-      commentary: "Scale with incline push ups or knees-down reps if needed."
+      commentary: "Brace the core and keep elbows tracking close to the body.",
+      image: "assets/exercises/push-ups.png"
     },
     {
-      id: "seed_bodyweight_squat",
-      name: "Bodyweight Squat",
-      description: "Sit the hips back and down, keep the chest tall, then drive through the feet to stand.",
-      sets: 4,
+      id: "seed_wall_pushups",
+      name: "wall pushups",
+      description: "Stand facing a wall, keep the body straight, and lower the chest toward the hands before pressing away.",
+      sets: 3,
       reps: 12,
-      commentary: "Keep knees tracking over toes and pause briefly at the bottom."
+      commentary: "Step farther from the wall to make the movement harder.",
+      image: "assets/exercises/wall-pushups.png"
     },
     {
-      id: "seed_reverse_lunge",
-      name: "Reverse Lunge",
-      description: "Step one foot back, lower until both knees bend, then push through the front foot to return.",
+      id: "seed_incline_push_ups",
+      name: "Incline push-ups",
+      description: "Place the hands on an elevated surface and keep a straight plank as you lower and press.",
+      sets: 3,
+      reps: 12,
+      commentary: "Use a lower surface as strength improves.",
+      image: "assets/exercises/incline-push-ups.png"
+    },
+    {
+      id: "seed_decline_push_ups",
+      name: "Decline push-ups",
+      description: "Elevate the feet, keep the body rigid, and lower the chest toward the floor under control.",
       sets: 3,
       reps: 10,
-      commentary: "Count reps per side. Use a wall or rack for balance if needed."
+      commentary: "Keep the hips from sagging as fatigue builds.",
+      image: "assets/exercises/decline-push-ups.png"
     },
     {
-      id: "seed_glute_bridge",
-      name: "Glute Bridge",
-      description: "Lie on your back, brace the core, and squeeze the glutes to lift the hips.",
+      id: "seed_rows",
+      name: "Rows",
+      description: "Grip the rings, keep the body straight, and pull the chest toward the hands.",
       sets: 3,
-      reps: 15,
-      commentary: "Pause at the top without over-arching the low back."
+      reps: 10,
+      commentary: "Walk the feet farther forward to increase the challenge.",
+      image: "assets/exercises/rows.png"
     },
     {
-      id: "seed_plank_hold",
-      name: "Plank Hold",
+      id: "seed_negative_pull_ups",
+      name: "Negative pull-ups",
+      description: "Start at the top of the pull-up and lower slowly until the arms are fully extended.",
+      sets: 3,
+      reps: 5,
+      commentary: "Use a box or jump to reach the top position, then control the descent.",
+      image: "assets/exercises/negative-pull-ups.png"
+    },
+    {
+      id: "seed_pull_ups",
+      name: "pull-ups",
+      description: "Hang from the bar, pull the chest upward, and lower back to a full controlled hang.",
+      sets: 3,
+      reps: 6,
+      commentary: "Keep the ribs down and avoid swinging between reps.",
+      image: "assets/exercises/pull-ups.png"
+    },
+    {
+      id: "seed_scapular_pulls",
+      name: "Scapular pulls",
+      description: "Hang with straight arms and pull the shoulder blades down without bending the elbows.",
+      sets: 3,
+      reps: 8,
+      commentary: "Think about moving the shoulders away from the ears.",
+      image: "assets/exercises/scapular-pulls.png"
+    },
+    {
+      id: "seed_plank",
+      name: "plank",
       description: "Hold a strong forearm plank with ribs tucked and glutes lightly squeezed.",
       sets: 3,
       reps: 30,
-      commentary: "Treat reps as seconds for this exercise."
+      commentary: "Treat reps as seconds for this exercise.",
+      image: "assets/exercises/plank.png"
     },
     {
-      id: "seed_dead_bug",
-      name: "Dead Bug",
-      description: "Keep the low back gently pressed down while extending opposite arm and leg.",
+      id: "seed_glute_bridge",
+      name: "Glute bridge",
+      description: "Lie on your back, brace the core, and squeeze the glutes to lift the hips.",
+      sets: 3,
+      reps: 15,
+      commentary: "Pause at the top without over-arching the low back.",
+      image: "assets/exercises/glute-bridge.png"
+    },
+    {
+      id: "seed_split_squats",
+      name: "Split squats",
+      description: "Use a stationary lunge stance, lower the back knee, and drive through the front foot to stand.",
       sets: 3,
       reps: 10,
-      commentary: "Count reps per side and move slowly."
-    },
-    {
-      id: "seed_mountain_climber",
-      name: "Mountain Climber",
-      description: "Start in a high plank and drive knees forward while keeping shoulders stacked over hands.",
-      sets: 3,
-      reps: 20,
-      commentary: "Count total reps. Keep the hips steady."
-    },
-    {
-      id: "seed_burpee",
-      name: "Burpee",
-      description: "Drop to the floor, kick back to plank, return the feet under you, and stand or jump tall.",
-      sets: 3,
-      reps: 8,
-      commentary: "Step the feet back instead of jumping for a lower-impact option."
-    },
-    {
-      id: "seed_dumbbell_row",
-      name: "Dumbbell Row",
-      description: "Hinge with a flat back and pull the weight toward the hip, keeping the shoulder down.",
-      sets: 3,
-      reps: 10,
-      commentary: "Count reps per side. Add load when you configure the workout."
-    },
-    {
-      id: "seed_shoulder_press",
-      name: "Shoulder Press",
-      description: "Press weights overhead from shoulder height while keeping ribs down and core braced.",
-      sets: 3,
-      reps: 10,
-      commentary: "Use dumbbells, kettlebells, or a barbell. Add load when you configure the workout."
-    },
-    {
-      id: "seed_romanian_deadlift",
-      name: "Romanian Deadlift",
-      description: "Hinge at the hips with a soft knee bend, feel the hamstrings load, then stand tall.",
-      sets: 3,
-      reps: 10,
-      commentary: "Keep the weight close and the spine neutral. Add load when you configure the workout."
-    },
-    {
-      id: "seed_jumping_jack",
-      name: "Jumping Jack",
-      description: "Jump feet out while raising arms overhead, then return to a tall standing position.",
-      sets: 3,
-      reps: 30,
-      commentary: "Step side to side for a quieter low-impact version."
+      commentary: "Count reps per side and keep the front knee tracking over the toes.",
+      image: "assets/exercises/split-squats.png"
     }
   ];
+  const DEFAULT_EXERCISE_IDS = new Set(DEFAULT_EXERCISES.map((exercise) => exercise.id));
+  const LEGACY_DEFAULT_EXERCISE_IDS = new Set([
+    "seed_push_up",
+    "seed_bodyweight_squat",
+    "seed_reverse_lunge",
+    "seed_glute_bridge",
+    "seed_plank_hold",
+    "seed_dead_bug",
+    "seed_mountain_climber",
+    "seed_burpee",
+    "seed_dumbbell_row",
+    "seed_shoulder_press",
+    "seed_romanian_deadlift",
+    "seed_jumping_jack"
+  ]);
 
   function uid(prefix = "id") {
     return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
@@ -272,6 +290,12 @@
 
   function seedDefaultLibraryIfNeeded(db) {
     if (db.meta.defaultLibraryVersion >= DEFAULT_LIBRARY_VERSION) return db;
+
+    if (db.meta.defaultLibraryVersion < 2) {
+      db.exercises = db.exercises.filter((exercise) => {
+        return !DEFAULT_EXERCISE_IDS.has(exercise.id) && !LEGACY_DEFAULT_EXERCISE_IDS.has(exercise.id);
+      });
+    }
 
     const existingIds = new Set(db.exercises.map((exercise) => exercise.id));
     const existingNames = new Set(
