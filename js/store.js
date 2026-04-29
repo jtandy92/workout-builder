@@ -146,7 +146,8 @@
       },
       ui: {
         selectedExerciseId: null,
-        activeWorkoutSession: null
+        activeWorkoutSession: null,
+        builderEditingWorkoutId: null
       },
       meta: {
         defaultLibrarySeeded: false,
@@ -297,7 +298,8 @@
       },
       ui: {
         selectedExerciseId: parsedUi.selectedExerciseId || null,
-        activeWorkoutSession: normalizeSession(parsedUi.activeWorkoutSession)
+        activeWorkoutSession: normalizeSession(parsedUi.activeWorkoutSession),
+        builderEditingWorkoutId: parsedUi.builderEditingWorkoutId || null
       },
       meta: {
         defaultLibrarySeeded: parsedMeta.defaultLibrarySeeded === true,
@@ -405,6 +407,87 @@
     return exercise;
   }
 
+  function updateExercise(exerciseId, exerciseData) {
+    let updatedExercise = null;
+
+    updateDB((db) => {
+      const index = db.exercises.findIndex((exercise) => exercise.id === exerciseId);
+      if (index < 0) return;
+
+      const existingExercise = db.exercises[index];
+      updatedExercise = normalizeExercise({
+        ...existingExercise,
+        id: existingExercise.id,
+        createdAt: existingExercise.createdAt,
+        name: exerciseData.name,
+        description: exerciseData.description,
+        sets: exerciseData.sets,
+        reps: exerciseData.reps,
+        restSeconds: exerciseData.restSeconds,
+        load: exerciseData.load,
+        commentary: exerciseData.commentary,
+        image: exerciseData.image
+      });
+
+      db.exercises[index] = updatedExercise;
+
+      db.builderDraft.exercises = db.builderDraft.exercises.map((exercise) => {
+        if (exercise.exerciseId !== exerciseId) return exercise;
+        return normalizeWorkoutExercise({
+          ...exercise,
+          name: updatedExercise.name,
+          image: updatedExercise.image,
+          description: updatedExercise.description,
+          commentary: updatedExercise.commentary,
+          sets: updatedExercise.sets,
+          reps: updatedExercise.reps,
+          restSeconds: updatedExercise.restSeconds,
+          load: updatedExercise.load
+        });
+      });
+
+      db.workouts = db.workouts.map((workout) => ({
+        ...workout,
+        exercises: workout.exercises.map((exercise) => {
+          if (exercise.exerciseId !== exerciseId) return exercise;
+          return normalizeWorkoutExercise({
+            ...exercise,
+            name: updatedExercise.name,
+            image: updatedExercise.image,
+            description: updatedExercise.description,
+            commentary: updatedExercise.commentary,
+            sets: updatedExercise.sets,
+            reps: updatedExercise.reps,
+            restSeconds: updatedExercise.restSeconds,
+            load: updatedExercise.load
+          });
+        })
+      }));
+
+      if (db.ui.activeWorkoutSession?.queue?.length) {
+        db.ui.activeWorkoutSession = normalizeSession({
+          ...db.ui.activeWorkoutSession,
+          queue: db.ui.activeWorkoutSession.queue.map((exercise) => {
+            if (exercise.exerciseId !== exerciseId) return exercise;
+            return {
+              ...exercise,
+              name: updatedExercise.name,
+              image: updatedExercise.image,
+              description: updatedExercise.description,
+              commentary: updatedExercise.commentary,
+              sets: updatedExercise.sets,
+              reps: updatedExercise.reps,
+              restSeconds: updatedExercise.restSeconds,
+              load: updatedExercise.load
+            };
+          })
+        });
+      }
+    });
+
+    return updatedExercise;
+  }
+
   function deleteExercise(exerciseId) {
     updateDB((db) => {
       db.exercises = db.exercises.filter((exercise) => exercise.id !== exerciseId);
@@ -442,9 +525,35 @@
     return workout;
   }
 
+  function updateWorkout(workoutId, workoutData) {
+    let updatedWorkout = null;
+
+    updateDB((db) => {
+      const index = db.workouts.findIndex((workout) => workout.id === workoutId);
+      if (index < 0) return;
+
+      const existingWorkout = db.workouts[index];
+      updatedWorkout = normalizeWorkout({
+        ...existingWorkout,
+        id: existingWorkout.id,
+        name: workoutData.name,
+        exercises: Array.isArray(workoutData.exercises) ? workoutData.exercises : [],
+        createdAt: existingWorkout.createdAt
+      });
+
+      db.workouts[index] = updatedWorkout;
+    });
+
+    return updatedWorkout;
+  }
+
   function deleteWorkout(workoutId) {
     updateDB((db) => {
       db.workouts = db.workouts.filter((workout) => workout.id !== workoutId);
+
+      if (db.ui.builderEditingWorkoutId === workoutId) {
+        db.ui.builderEditingWorkoutId = null;
+      }
     });
   }
 
@@ -468,6 +577,16 @@
       name: "",
       exercises: []
     });
+  }
+
+  function setBuilderEditingWorkoutId(workoutId) {
+    updateDB((db) => {
+      db.ui.builderEditingWorkoutId = workoutId || null;
+    });
+  }
+
+  function getBuilderEditingWorkoutId() {
+    return getDB().ui.builderEditingWorkoutId || null;
   }
 
   function addExerciseToBuilder(configuredExercise) {
@@ -605,14 +724,18 @@
     getExercises,
     getExerciseById,
     addExercise,
+    updateExercise,
     deleteExercise,
     getWorkouts,
     getWorkoutById,
     addWorkout,
+    updateWorkout,
     deleteWorkout,
     getBuilderDraft,
     setBuilderDraft,
     resetBuilderDraft,
+    setBuilderEditingWorkoutId,
+    getBuilderEditingWorkoutId,
     addExerciseToBuilder,
     removeExerciseFromBuilder,
     setSelectedExerciseId,

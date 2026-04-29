@@ -3,6 +3,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const listSection = document.getElementById("builder-list-section");
   const addExerciseButton = document.getElementById("add-exercise-button");
   const saveRoutineButton = document.getElementById("save-routine-button");
+  const params = new URLSearchParams(window.location.search);
+  const editWorkoutId = params.get("editWorkoutId") || "";
+  const editingWorkout = editWorkoutId ? window.AppStore.getWorkoutById(editWorkoutId) : null;
+  const isEditMode = Boolean(editWorkoutId);
+
+  if (editWorkoutId && !editingWorkout) {
+    alert("Workout playlist not found.");
+    window.AppStore.setBuilderEditingWorkoutId(null);
+    window.location.href = "index.html";
+    return;
+  }
+
+  if (editingWorkout && window.AppStore.getBuilderEditingWorkoutId() !== editWorkoutId) {
+    window.AppStore.setBuilderDraft({
+      name: editingWorkout.name,
+      exercises: editingWorkout.exercises
+    });
+    window.AppStore.setBuilderEditingWorkoutId(editWorkoutId);
+  }
+
+  if (!isEditMode && window.AppStore.getBuilderEditingWorkoutId()) {
+    window.AppStore.setBuilderEditingWorkoutId(null);
+  }
 
   function loadDraft() {
     return window.AppStore.getBuilderDraft();
@@ -20,7 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   addExerciseButton?.addEventListener("click", () => {
     saveDraftName();
-    window.location.href = "exercise-library.html?mode=pick";
+    const editParam = editWorkoutId ? `&editWorkoutId=${encodeURIComponent(editWorkoutId)}` : "";
+    window.location.href = `exercise-library.html?mode=pick${editParam}`;
   });
 
   saveRoutineButton?.addEventListener("click", () => {
@@ -42,12 +66,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    window.AppStore.addWorkout({
-      name: draft.name,
-      exercises: validExercises
-    });
+    if (isEditMode) {
+      const updatedWorkout = window.AppStore.updateWorkout(editWorkoutId, {
+        name: draft.name,
+        exercises: validExercises
+      });
+
+      if (!updatedWorkout) {
+        alert("Could not update this workout playlist.");
+        return;
+      }
+    } else {
+      window.AppStore.addWorkout({
+        name: draft.name,
+        exercises: validExercises
+      });
+    }
 
     window.AppStore.resetBuilderDraft();
+    window.AppStore.setBuilderEditingWorkoutId(null);
     window.location.href = "index.html";
   });
 

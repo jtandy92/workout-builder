@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     listWrapper.className = "col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
 
     workouts.forEach((workout) => {
-      const exerciseCount = workout.exercises.length;
+      const exerciseNames = getExerciseNamePreview(workout.exercises);
 
       const card = document.createElement("div");
       card.className = "bg-neutral-900/50 p-8 rounded-xl flex flex-col justify-between min-h-[320px]";
@@ -46,14 +46,25 @@ document.addEventListener("DOMContentLoaded", () => {
       card.innerHTML = `
         <div>
           <h3 class="text-2xl font-bold mb-4">${escapeHtml(workout.name)}</h3>
-          <p class="text-neutral-400">${exerciseCount} exercises</p>
+          <ul class="text-neutral-400 space-y-1 text-sm">
+            ${exerciseNames.map((name) => `
+              <li class="uppercase tracking-wide">${escapeHtml(name)}</li>
+            `).join("")}
+          </ul>
         </div>
 
         <div class="mt-6 flex justify-between items-center">
-          <button class="start-workout bg-cyan-400 text-black px-4 py-2 rounded"
-            data-id="${escapeHtml(workout.id)}">
-            Start
-          </button>
+          <div class="flex gap-3">
+            <button class="start-workout bg-cyan-400 text-black px-4 py-2 rounded"
+              data-id="${escapeHtml(workout.id)}">
+              Start
+            </button>
+
+            <button class="edit-workout border border-cyan-400 text-cyan-400 px-4 py-2 rounded"
+              data-id="${escapeHtml(workout.id)}">
+              Edit
+            </button>
+          </div>
 
           <button class="delete-workout text-red-400"
             data-id="${escapeHtml(workout.id)}">
@@ -94,6 +105,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
+    workoutsGrid.querySelectorAll(".edit-workout").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const workoutId = btn.dataset.id;
+        const workout = window.AppStore.getWorkoutById(workoutId);
+        if (!workout) return;
+
+        window.AppStore.setBuilderDraft({
+          name: workout.name,
+          exercises: workout.exercises
+        });
+        window.AppStore.setBuilderEditingWorkoutId(workout.id);
+        window.location.href = `workout-builder.html?editWorkoutId=${encodeURIComponent(workout.id)}`;
+      });
+    });
+
     workoutsGrid.querySelectorAll(".delete-workout").forEach((btn) => {
       btn.addEventListener("click", () => {
         const workoutId = btn.dataset.id;
@@ -110,6 +136,18 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function getExerciseNamePreview(exercises) {
+    const names = Array.isArray(exercises)
+      ? exercises.map((exercise) => exercise?.name || "Exercise")
+      : [];
+
+    if (names.length > 6) {
+      return [...names.slice(0, 5), "..."];
+    }
+
+    return names;
   }
 
   renderWorkouts();

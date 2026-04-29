@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const editWorkoutId = params.get("editWorkoutId") || "";
   const exerciseId = window.AppStore.getSelectedExerciseId();
   const exercise = exerciseId ? window.AppStore.getExerciseById(exerciseId) : null;
 
@@ -88,7 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.AppStore.addExerciseToBuilder(configuredExercise);
-    window.location.href = "workout-builder.html";
+    const editParam = editWorkoutId ? `?editWorkoutId=${encodeURIComponent(editWorkoutId)}` : "";
+    window.location.href = `workout-builder.html${editParam}`;
   });
 
   function parseLoadNumber(loadText) {
