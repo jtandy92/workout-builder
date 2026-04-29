@@ -2,6 +2,7 @@
   const STORAGE_KEY = "exercise_app_db_v1";
   const DEFAULT_LIBRARY_VERSION = 2;
   const DEFAULT_LIBRARY_CREATED_AT = "2026-04-28T00:00:00.000Z";
+  const DEFAULT_REST_SECONDS = 60;
   const DEFAULT_EXERCISES = [
     {
       id: "seed_push_ups",
@@ -9,6 +10,7 @@
       description: "Keep a straight line from shoulders to heels. Lower under control, then press the floor away.",
       sets: 3,
       reps: 12,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Brace the core and keep elbows tracking close to the body.",
       image: "assets/exercises/push-ups.png"
     },
@@ -18,6 +20,7 @@
       description: "Stand facing a wall, keep the body straight, and lower the chest toward the hands before pressing away.",
       sets: 3,
       reps: 12,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Step farther from the wall to make the movement harder.",
       image: "assets/exercises/wall-pushups.png"
     },
@@ -27,6 +30,7 @@
       description: "Place the hands on an elevated surface and keep a straight plank as you lower and press.",
       sets: 3,
       reps: 12,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Use a lower surface as strength improves.",
       image: "assets/exercises/incline-push-ups.png"
     },
@@ -36,6 +40,7 @@
       description: "Elevate the feet, keep the body rigid, and lower the chest toward the floor under control.",
       sets: 3,
       reps: 10,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Keep the hips from sagging as fatigue builds.",
       image: "assets/exercises/decline-push-ups.png"
     },
@@ -45,6 +50,7 @@
       description: "Grip the rings, keep the body straight, and pull the chest toward the hands.",
       sets: 3,
       reps: 10,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Walk the feet farther forward to increase the challenge.",
       image: "assets/exercises/rows.png"
     },
@@ -54,6 +60,7 @@
       description: "Start at the top of the pull-up and lower slowly until the arms are fully extended.",
       sets: 3,
       reps: 5,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Use a box or jump to reach the top position, then control the descent.",
       image: "assets/exercises/negative-pull-ups.png"
     },
@@ -63,6 +70,7 @@
       description: "Hang from the bar, pull the chest upward, and lower back to a full controlled hang.",
       sets: 3,
       reps: 6,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Keep the ribs down and avoid swinging between reps.",
       image: "assets/exercises/pull-ups.png"
     },
@@ -72,6 +80,7 @@
       description: "Hang with straight arms and pull the shoulder blades down without bending the elbows.",
       sets: 3,
       reps: 8,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Think about moving the shoulders away from the ears.",
       image: "assets/exercises/scapular-pulls.png"
     },
@@ -81,6 +90,7 @@
       description: "Hold a strong forearm plank with ribs tucked and glutes lightly squeezed.",
       sets: 3,
       reps: 30,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Treat reps as seconds for this exercise.",
       image: "assets/exercises/plank.png"
     },
@@ -90,6 +100,7 @@
       description: "Lie on your back, brace the core, and squeeze the glutes to lift the hips.",
       sets: 3,
       reps: 15,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Pause at the top without over-arching the low back.",
       image: "assets/exercises/glute-bridge.png"
     },
@@ -99,6 +110,7 @@
       description: "Use a stationary lunge stance, lower the back knee, and drive through the front foot to stand.",
       sets: 3,
       reps: 10,
+      restSeconds: DEFAULT_REST_SECONDS,
       commentary: "Count reps per side and keep the front knee tracking over the toes.",
       image: "assets/exercises/split-squats.png"
     }
@@ -174,6 +186,12 @@
     return Math.floor(parsed);
   }
 
+  function normalizeRestSeconds(value, fallback = DEFAULT_REST_SECONDS) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed < 0) return fallback;
+    return Math.floor(parsed);
+  }
+
   function isRunnableExercise(exercise) {
     return toPositiveInteger(exercise.sets) > 0 && toPositiveInteger(exercise.reps) > 0;
   }
@@ -185,6 +203,7 @@
       description: cleanString(exercise.description),
       sets: toPositiveInteger(exercise.sets),
       reps: toPositiveInteger(exercise.reps),
+      restSeconds: normalizeRestSeconds(exercise.restSeconds),
       load: cleanString(exercise.load),
       commentary: cleanString(exercise.commentary),
       image: cleanString(exercise.image),
@@ -202,6 +221,7 @@
       commentary: cleanString(exercise.commentary),
       sets: toPositiveInteger(exercise.sets),
       reps: toPositiveInteger(exercise.reps),
+      restSeconds: normalizeRestSeconds(exercise.restSeconds),
       load: cleanString(exercise.load)
     };
   }
@@ -249,6 +269,11 @@
       workoutName: cleanString(session.workoutName, "Workout"),
       startedAt: cleanString(session.startedAt, new Date().toISOString()),
       elapsedSeconds: toNonNegativeSeconds(session.elapsedSeconds),
+      timerDurationSeconds: normalizeRestSeconds(session.timerDurationSeconds),
+      timerRemainingSeconds: normalizeRestSeconds(
+        session.timerRemainingSeconds,
+        normalizeRestSeconds(session.timerDurationSeconds)
+      ),
       currentExerciseIndex,
       queue
     };
@@ -366,6 +391,7 @@
       description: exerciseData.description,
       sets: exerciseData.sets,
       reps: exerciseData.reps,
+      restSeconds: exerciseData.restSeconds,
       load: exerciseData.load,
       commentary: exerciseData.commentary,
       image: exerciseData.image,
@@ -455,6 +481,7 @@
         commentary: configuredExercise.commentary || "",
         sets: configuredExercise.sets,
         reps: configuredExercise.reps,
+        restSeconds: configuredExercise.restSeconds,
         load: configuredExercise.load || ""
       }));
     });
@@ -488,6 +515,8 @@
       workoutName: workout.name,
       startedAt: new Date().toISOString(),
       elapsedSeconds: 0,
+      timerDurationSeconds: normalizeRestSeconds(workout.exercises[0]?.restSeconds),
+      timerRemainingSeconds: normalizeRestSeconds(workout.exercises[0]?.restSeconds),
       currentExerciseIndex: 0,
       queue: workout.exercises.map((exercise) => ({
         ...exercise,
@@ -595,6 +624,7 @@
     addHistoryEntry,
     getHistory,
     deleteHistoryEntry,
+    DEFAULT_REST_SECONDS,
     formatDuration,
     formatDate,
     formatTime

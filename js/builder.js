@@ -96,6 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="font-mono text-[11px] uppercase tracking-widest text-neutral-500">
                   ${exercise.sets} sets x ${exercise.reps} reps${exercise.load ? ` - ${escapeHtml(exercise.load)}` : ""}
                 </p>
+                <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-400/60 mt-3">
+                  Rest ${window.AppStore.formatDuration(exercise.restSeconds ?? window.AppStore.DEFAULT_REST_SECONDS)}
+                </p>
                 ${
                   exercise.commentary
                     ? `<p class="text-xs text-neutral-400 mt-3 max-w-xl">${escapeHtml(exercise.commentary)}</p>`

@@ -99,36 +99,49 @@
     <div class="space-y-8">
       <section class="space-y-8">
         <div class="bg-neutral-900/40 p-8 border border-white/5 space-y-10">
-          <div class="flex flex-col">
-            <div class="flex justify-between items-baseline mb-4">
-              <label class="font-headline font-bold text-xl uppercase tracking-[0.1em] text-white">Target Sets</label>
-              <span class="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">Adjust as needed</span>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col">
+              <div class="flex justify-between items-baseline mb-4">
+                <label class="font-headline font-bold text-xl uppercase tracking-[0.1em] text-white">Target Sets</label>
+                <span class="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">Adjust as needed</span>
+              </div>
+              <div class="relative group">
+                <input id="details-sets" class="w-full bg-neutral-950/50 border-none border-b border-white/10 focus:ring-0 focus:border-cyan-400 transition-all text-5xl md:text-6xl font-headline font-bold py-6 px-0 text-center text-white placeholder-white/20" min="1" step="1" type="number" value="4" />
+                <div class="absolute right-6 bottom-8 font-mono text-[10px] text-neutral-600 font-bold tracking-tighter">SETS</div>
+              </div>
             </div>
-            <div class="relative group">
-              <input id="details-sets" class="w-full bg-neutral-950/50 border-none border-b border-white/10 focus:ring-0 focus:border-cyan-400 transition-all text-5xl md:text-6xl font-headline font-bold py-6 px-0 text-center text-white placeholder-white/20" min="1" step="1" type="number" value="4" />
-              <div class="absolute right-6 bottom-8 font-mono text-[10px] text-neutral-600 font-bold tracking-tighter">SETS</div>
-            </div>
-          </div>
 
-          <div class="flex flex-col">
-            <div class="flex justify-between items-baseline mb-4">
-              <label class="font-headline font-bold text-xl uppercase tracking-[0.1em] text-white">Target Reps</label>
-              <span class="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">Adjust as needed</span>
+            <div class="flex flex-col">
+              <div class="flex justify-between items-baseline mb-4">
+                <label class="font-headline font-bold text-xl uppercase tracking-[0.1em] text-white">Target Reps</label>
+                <span class="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">Adjust as needed</span>
+              </div>
+              <div class="relative group">
+                <input id="details-reps" class="w-full bg-neutral-950/50 border-none border-b border-white/10 focus:ring-0 focus:border-cyan-400 transition-all text-5xl md:text-6xl font-headline font-bold py-6 px-0 text-center text-white placeholder-white/20" min="1" step="1" type="number" value="10" />
+                <div class="absolute right-6 bottom-8 font-mono text-[10px] text-neutral-600 font-bold tracking-tighter">REPS</div>
+              </div>
             </div>
-            <div class="relative group">
-              <input id="details-reps" class="w-full bg-neutral-950/50 border-none border-b border-white/10 focus:ring-0 focus:border-cyan-400 transition-all text-5xl md:text-6xl font-headline font-bold py-6 px-0 text-center text-white placeholder-white/20" min="1" step="1" type="number" value="10" />
-              <div class="absolute right-6 bottom-8 font-mono text-[10px] text-neutral-600 font-bold tracking-tighter">REPS</div>
-            </div>
-          </div>
 
-          <div class="flex flex-col">
-            <div class="flex justify-between items-baseline mb-4">
-              <label class="font-headline font-bold text-xl uppercase tracking-[0.1em] text-white">Load</label>
-              <span class="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">Use weight if needed</span>
+            <div class="flex flex-col">
+              <div class="flex justify-between items-baseline mb-4">
+                <label class="font-headline font-bold text-xl uppercase tracking-[0.1em] text-white">Rest Time</label>
+                <span class="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">Defaults to 1 minute</span>
+              </div>
+              <div class="relative group">
+                <input id="details-rest-seconds" class="w-full bg-neutral-950/50 border-none border-b border-white/10 focus:ring-0 focus:border-cyan-400 transition-all text-5xl md:text-6xl font-headline font-bold py-6 px-0 text-center text-white placeholder-white/20" min="0" step="15" type="number" value="60" />
+                <div class="absolute right-6 bottom-8 font-mono text-[10px] text-neutral-600 font-bold tracking-tighter">SEC</div>
+              </div>
             </div>
-            <div class="relative group">
-              <input id="details-load" class="w-full bg-neutral-950/50 border-none border-b border-white/10 focus:ring-0 focus:border-cyan-400 transition-all text-5xl md:text-6xl font-headline font-bold py-6 px-0 text-center text-white placeholder-white/20" min="0" step="2.5" type="number" value="0" />
-              <div class="absolute right-6 bottom-8 font-mono text-[10px] text-neutral-600 font-bold tracking-tighter">KG</div>
+
+            <div class="flex flex-col">
+              <div class="flex justify-between items-baseline mb-4">
+                <label class="font-headline font-bold text-xl uppercase tracking-[0.1em] text-white">Load</label>
+                <span class="font-mono text-[10px] text-neutral-500 uppercase tracking-widest">Use weight if needed</span>
+              </div>
+              <div class="relative group">
+                <input id="details-load" class="w-full bg-neutral-950/50 border-none border-b border-white/10 focus:ring-0 focus:border-cyan-400 transition-all text-5xl md:text-6xl font-headline font-bold py-6 px-0 text-center text-white placeholder-white/20" min="0" step="2.5" type="number" value="0" />
+                <div class="absolute right-6 bottom-8 font-mono text-[10px] text-neutral-600 font-bold tracking-tighter">KG</div>
+              </div>
             </div>
           </div>
         </div>

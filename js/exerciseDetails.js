@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const imageEl = document.getElementById("details-exercise-image");
   const setsEl = document.getElementById("details-sets");
   const repsEl = document.getElementById("details-reps");
+  const restSecondsEl = document.getElementById("details-rest-seconds");
   const loadEl = document.getElementById("details-load");
   const commentaryEl = document.getElementById("details-commentary");
   const saveButton = document.getElementById("details-save-button");
@@ -29,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (setsEl) setsEl.value = exercise.sets || 4;
   if (repsEl) repsEl.value = exercise.reps || 10;
+  if (restSecondsEl) restSecondsEl.value = exercise.restSeconds ?? window.AppStore.DEFAULT_REST_SECONDS;
   if (loadEl) loadEl.value = parseLoadNumber(exercise.load);
   if (commentaryEl) commentaryEl.textContent = exercise.commentary || exercise.description || "Edit commentary here.";
 
@@ -44,13 +46,25 @@ document.addEventListener("DOMContentLoaded", () => {
     return parsed;
   }
 
+  function parseRestSeconds(value) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed < 0) return null;
+    return Math.floor(parsed);
+  }
+
   saveButton?.addEventListener("click", () => {
     const sets = parsePositiveInteger(setsEl?.value);
     const reps = parsePositiveInteger(repsEl?.value);
+    const restSeconds = parseRestSeconds(restSecondsEl?.value);
     const loadValue = parseNonNegativeNumber(loadEl?.value || 0);
 
     if (!sets || !reps) {
       alert("Sets and reps must be whole numbers greater than 0.");
+      return;
+    }
+
+    if (restSeconds === null) {
+      alert("Rest time must be 0 seconds or greater.");
       return;
     }
 
@@ -67,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       commentary: commentaryEl?.textContent?.trim() || "",
       sets,
       reps,
+      restSeconds,
       load: loadValue > 0
         ? `${loadValue} kg`
         : ""
